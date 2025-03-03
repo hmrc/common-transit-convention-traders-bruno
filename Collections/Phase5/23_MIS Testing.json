@@ -1,0 +1,229 @@
+{
+  "name": "23_MIS Testing",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "01- POST IE015 Simplified MIS",
+      "seq": 1,
+      "request": {
+        "url": "{{baseURL}}/movements/departures",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/xml",
+            "enabled": true
+          },
+          {
+            "name": "Accept",
+            "value": "application/vnd.hmrc.2.1+json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "xml",
+          "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\r\n    <messageSender>9999912345</messageSender>\r\n    <messageRecipient>NTA.GB</messageRecipient>\r\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\r\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\r\n    <messageType>CC015C</messageType>\r\n    <TransitOperation>\r\n        <LRN>{{LRN}}</LRN>\r\n        <declarationType>T1</declarationType>\r\n        <additionalDeclarationType>A</additionalDeclarationType>\r\n        <security>0</security>\r\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\r\n        <!-- <specificCircumstanceIndicator>A20</specificCircumstanceIndicator> -->\r\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\r\n        <bindingItinerary>0</bindingItinerary>\r\n        <limitDate>{{limitDate}}</limitDate>\r\n    </TransitOperation>\r\n    <Authorisation>\r\n        <sequenceNumber>1</sequenceNumber>\r\n        <type>C521</type>\r\n        <referenceNumber>GBACR24A1500654</referenceNumber>\r\n    </Authorisation>\r\n    <CustomsOfficeOfDeparture>\r\n        <referenceNumber>GB000246</referenceNumber>\r\n    </CustomsOfficeOfDeparture>\r\n    <CustomsOfficeOfDestinationDeclared>\r\n        <referenceNumber>XI000142</referenceNumber>\r\n    </CustomsOfficeOfDestinationDeclared>\r\n    <CustomsOfficeOfTransitDeclared>\r\n        <sequenceNumber>1</sequenceNumber>\r\n        <referenceNumber>XI000142</referenceNumber>\r\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\r\n    </CustomsOfficeOfTransitDeclared>\r\n    <HolderOfTheTransitProcedure>\r\n        <identificationNumber>GB201909015000</identificationNumber>\r\n    </HolderOfTheTransitProcedure>\r\n    <Guarantee>\r\n        <sequenceNumber>1</sequenceNumber>\r\n        <guaranteeType>1</guaranteeType>\r\n        <GuaranteeReference>\r\n            <sequenceNumber>1</sequenceNumber>\r\n            <GRN>24GB0000010000295</GRN>\r\n            <accessCode>AC01</accessCode>\r\n            <amountToBeCovered>100.01</amountToBeCovered>\r\n            <currency>GBP</currency>\r\n        </GuaranteeReference>\r\n    </Guarantee>\r\n    <Consignment>\r\n        <countryOfDispatch>GB</countryOfDispatch>\r\n        <countryOfDestination>XI</countryOfDestination>\r\n        <containerIndicator>1</containerIndicator>\r\n        <inlandModeOfTransport>4</inlandModeOfTransport>\r\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder>\r\n        <grossMass>1000.00</grossMass>\r\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\r\n        <Consignor>\r\n            <identificationNumber>GB201909015000</identificationNumber>\r\n        </Consignor>\r\n        <Consignee>\r\n            <identificationNumber>XI985524247819</identificationNumber>\r\n        </Consignee>\r\n        <TransportEquipment>\r\n            <sequenceNumber>1</sequenceNumber>\r\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\r\n            <numberOfSeals>1</numberOfSeals>\r\n            <Seal>\r\n                <sequenceNumber>1</sequenceNumber>\r\n                <identifier>1234</identifier>\r\n            </Seal>\r\n            <GoodsReference>\r\n                <sequenceNumber>1</sequenceNumber>\r\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\r\n            </GoodsReference>\r\n        </TransportEquipment>\r\n        <LocationOfGoods>\r\n            <typeOfLocation>B</typeOfLocation>\r\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\r\n            <authorisationNumber>GBDESBT13ET</authorisationNumber>\r\n        </LocationOfGoods>\r\n        <!-- <DepartureTransportMeans>\r\n            <sequenceNumber>1</sequenceNumber>\r\n            <typeOfIdentification>30</typeOfIdentification>\r\n            <identificationNumber>NC15REG</identificationNumber>\r\n            <nationality>GB</nationality>\r\n        </DepartureTransportMeans> -->\r\n        <PlaceOfLoading>\r\n            <UNLocode>ADENC</UNLocode>\r\n            <country>GB</country>\r\n            <location>Dover</location>\r\n        </PlaceOfLoading>\r\n        <HouseConsignment>\r\n            <sequenceNumber>1</sequenceNumber>\r\n            <grossMass>1000.00</grossMass>\r\n            <ConsignmentItem>\r\n                <goodsItemNumber>1</goodsItemNumber>\r\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\r\n                <Commodity>\r\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\r\n                    <CommodityCode>\r\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\r\n                    </CommodityCode>\r\n                    <GoodsMeasure>\r\n                        <grossMass>1000.000</grossMass>\r\n                        <netMass>950.000</netMass>\r\n                    </GoodsMeasure>\r\n                </Commodity>\r\n                <Packaging>\r\n                    <sequenceNumber>1</sequenceNumber>\r\n                    <typeOfPackages>BX</typeOfPackages>\r\n                    <numberOfPackages>1</numberOfPackages>\r\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\r\n                </Packaging>\r\n            </ConsignmentItem>\r\n        </HouseConsignment>\r\n    </Consignment>\r\n</ncts:CC015C>",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {
+          "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+        },
+        "vars": {},
+        "assertions": [],
+        "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "02- GET IE015 dept Id",
+      "seq": 2,
+      "request": {
+        "url": "{{baseURL}}/movements/departures/{{departureId}}/messages/",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/vnd.hmrc.2.1+json",
+            "enabled": true
+          },
+          {
+            "name": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "04- POST IE007 Normal",
+      "seq": 3,
+      "request": {
+        "url": "{{baseUrlContext}}/movements/arrivals",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/xml",
+            "enabled": true
+          },
+          {
+            "name": "Accept",
+            "value": "application/vnd.hmrc.2.1+json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "xml",
+          "xml": "<ncts:CC007C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC007C</messageType>\n    <TransitOperation>\n        <MRN>23GB000246SWUFTSJ4</MRN>\n        <arrivalNotificationDateAndTime>{{arrivalNotificationDateAndTime}}</arrivalNotificationDateAndTime>\n        <simplifiedProcedure>0</simplifiedProcedure>\n        <incidentFlag>0</incidentFlag>\n    </TransitOperation>\n    <CustomsOfficeOfDestinationActual>\n        <referenceNumber>XI000081</referenceNumber>\n    </CustomsOfficeOfDestinationActual>\n    <TraderAtDestination>\n        <identificationNumber>XI985524247819</identificationNumber>\n    </TraderAtDestination>\n    <Consignment>\n        <LocationOfGoods>\n            <typeOfLocation>C</typeOfLocation>\n            <qualifierOfIdentification>U</qualifierOfIdentification>\n            <UNLocode>GBBEL</UNLocode>\n        </LocationOfGoods>\n    </Consignment>\n</ncts:CC007C>",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {
+          "req": "const moment = require('moment');\n\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalNotificationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))\n"
+        },
+        "vars": {},
+        "assertions": [],
+        "tests": "var jsonData = res.getBody();\nvar arrivalId =  jsonData._links.self.href.split(\"/\")[5]\n\nbru.setEnvVar(\"arrivalId\",arrivalId);\n\n\ntest(\"Status code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\nif (res.getStatus() !== 202) {\n    return;\n}",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "05- GET IE007 -- IE043",
+      "seq": 4,
+      "request": {
+        "url": "{{baseUrlContext}}/movements/arrivals/{{arrivalId}}/messages",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/vnd.hmrc.2.1+json",
+            "enabled": true
+          },
+          {
+            "name": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "test(\"Get all arrival must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    }
+  ],
+  "activeEnvironmentUid": null,
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      },
+      "vars": {
+        "req": [
+          {
+            "name": "LRN",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "oorujzMM8HkLJeTbWV5f5"
+          },
+          {
+            "name": "limitDate",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "Hr3jZlBvlHddLMfAg88ac"
+          },
+          {
+            "name": "preparationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "BIVbXeCtTegyTMEeL6l5p"
+          },
+          {
+            "name": "arrivalTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "CAfID7ipSsoQqm70677BF"
+          },
+          {
+            "name": "messageIdentification",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "VdtATAQA5bKYPDFv7S7mR"
+          },
+          {
+            "name": "arrivalNotificationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "iFNQvnMyjv80QlHatFsuz"
+          }
+        ]
+      }
+    },
+    "meta": {
+      "name": "23_MIS Testing"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "23_MIS Testing",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}
