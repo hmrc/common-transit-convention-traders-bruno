@@ -1,0 +1,1047 @@
+{
+  "name": "13_P5 (SIT) Large Messages E2E Testing XI",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "02 - Simplified Departure Multiple house consignment to multiple consignee",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "02 - Simplified Departure Multiple house consignment to multiple consignee"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "02- GET IE015 dept Id",
+          "seq": 3,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures/67ceca088ca2f9d3/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Empty body to Small API",
+          "seq": 1,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 202 Accepted\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\ntest(\"Response body is JSON\", function() {\n//     expect(pm.response.to.have.jsonBody());\n});\n\ntest(\"Response body\", function () {\n    let responseJson = res.getBody();\n    bru.setEnvVar(\"upscan_url\",responseJson.uploadRequest.href)\n  \n    bru.setVar(\"x-amz-credential\", responseJson.uploadRequest.fields[\"x-amz-credential\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-response\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-response\"]);\n    bru.setVar(\"x-amz-meta-original-filename\", responseJson.uploadRequest.fields[\"x-amz-meta-original-filename\"]);\n    bru.setVar(\"x-amz-algorithm\", responseJson.uploadRequest.fields[\"x-amz-algorithm\"]);\n    bru.setVar(\"x-amz-signature\", responseJson.uploadRequest.fields[\"x-amz-signature\"]);\n    bru.setVar(\"x-amz-meta-session-id\", responseJson.uploadRequest.fields[\"x-amz-meta-session-id\"]);\n    bru.setVar(\"x-amz-meta-callback-url\", responseJson.uploadRequest.fields[\"x-amz-meta-callback-url\"]);\n    bru.setVar(\"x-amz-date\", responseJson.uploadRequest.fields[\"x-amz-date\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-received\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-received\"]);\n    bru.setVar(\"x-amz-meta-request-id\", responseJson.uploadRequest.fields[\"x-amz-meta-request-id\"]);\n    bru.setVar(\"key\", responseJson.uploadRequest.fields[\"key\"]);\n    bru.setVar(\"acl\", responseJson.uploadRequest.fields[\"acl\"]);\n    bru.setVar(\"x-amz-meta-consuming-service\", responseJson.uploadRequest.fields[\"x-amz-meta-consuming-service\"]);\n    bru.setVar(\"policy\", responseJson.uploadRequest.fields[\"policy\"]);\n\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified -5-8-6 mb- via Upscan",
+          "seq": 2,
+          "request": {
+            "url": "{{upscan_url}}",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "multipartForm",
+              "formUrlEncoded": [],
+              "multipartForm": [
+                {
+                  "type": "text",
+                  "name": "x-amz-credential",
+                  "value": "{{x-amz-credential}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-response",
+                  "value": "{{x-amz-meta-upscan-initiate-response}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-original-filename",
+                  "value": "{{x-amz-meta-original-filename}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-algorithm",
+                  "value": "{{x-amz-algorithm}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-signature",
+                  "value": "{{x-amz-signature}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-session-id",
+                  "value": "{{x-amz-meta-session-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-callback-url",
+                  "value": "{{x-amz-meta-callback-url}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-date",
+                  "value": "{{x-amz-date}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-received",
+                  "value": "{{x-amz-meta-upscan-initiate-received}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-request-id",
+                  "value": "{{x-amz-meta-request-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "key",
+                  "value": "{{key}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "acl",
+                  "value": "{{acl}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-consuming-service",
+                  "value": "{{x-amz-meta-consuming-service}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "policy",
+                  "value": "{{policy}}",
+                  "enabled": true
+                },
+                {
+                  "type": "file",
+                  "name": "file",
+                  "value": [
+                    "/Users/shravanmechineni/Downloads/CC015C_Less_Than_20MB_New_XI.xml"
+                  ],
+                  "enabled": true
+                }
+              ],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTXI1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"POST IE015 must return response code is 204\", function () {\n    expect(res.getStatus()).to.equal(204);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "01 - Simplified Departure Multiple house consignment to multiple consignee",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "01 - Simplified Departure Multiple house consignment to multiple consignee"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST Empty body to Small API",
+          "seq": 1,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 202 Accepted\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\ntest(\"Response body is JSON\", function() {\n//     expect(pm.response.to.have.jsonBody());\n});\n\ntest(\"Response body\", function () {\n    let responseJson = res.getBody();\n    bru.setEnvVar(\"upscan_url\",responseJson.uploadRequest.href)\n  \n    bru.setVar(\"x-amz-credential\", responseJson.uploadRequest.fields[\"x-amz-credential\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-response\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-response\"]);\n    bru.setVar(\"x-amz-meta-original-filename\", responseJson.uploadRequest.fields[\"x-amz-meta-original-filename\"]);\n    bru.setVar(\"x-amz-algorithm\", responseJson.uploadRequest.fields[\"x-amz-algorithm\"]);\n    bru.setVar(\"x-amz-signature\", responseJson.uploadRequest.fields[\"x-amz-signature\"]);\n    bru.setVar(\"x-amz-meta-session-id\", responseJson.uploadRequest.fields[\"x-amz-meta-session-id\"]);\n    bru.setVar(\"x-amz-meta-callback-url\", responseJson.uploadRequest.fields[\"x-amz-meta-callback-url\"]);\n    bru.setVar(\"x-amz-date\", responseJson.uploadRequest.fields[\"x-amz-date\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-received\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-received\"]);\n    bru.setVar(\"x-amz-meta-request-id\", responseJson.uploadRequest.fields[\"x-amz-meta-request-id\"]);\n    bru.setVar(\"key\", responseJson.uploadRequest.fields[\"key\"]);\n    bru.setVar(\"acl\", responseJson.uploadRequest.fields[\"acl\"]);\n    bru.setVar(\"x-amz-meta-consuming-service\", responseJson.uploadRequest.fields[\"x-amz-meta-consuming-service\"]);\n    bru.setVar(\"policy\", responseJson.uploadRequest.fields[\"policy\"]);\n\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified -5-8-6 mb- via Upscan",
+          "seq": 2,
+          "request": {
+            "url": "{{upscan_url}}",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "multipartForm",
+              "formUrlEncoded": [],
+              "multipartForm": [
+                {
+                  "type": "text",
+                  "name": "x-amz-credential",
+                  "value": "{{x-amz-credential}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-response",
+                  "value": "{{x-amz-meta-upscan-initiate-response}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-original-filename",
+                  "value": "{{x-amz-meta-original-filename}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-algorithm",
+                  "value": "{{x-amz-algorithm}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-signature",
+                  "value": "{{x-amz-signature}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-session-id",
+                  "value": "{{x-amz-meta-session-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-callback-url",
+                  "value": "{{x-amz-meta-callback-url}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-date",
+                  "value": "{{x-amz-date}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-received",
+                  "value": "{{x-amz-meta-upscan-initiate-received}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-request-id",
+                  "value": "{{x-amz-meta-request-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "key",
+                  "value": "{{key}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "acl",
+                  "value": "{{acl}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-consuming-service",
+                  "value": "{{x-amz-meta-consuming-service}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "policy",
+                  "value": "{{policy}}",
+                  "enabled": true
+                },
+                {
+                  "type": "file",
+                  "name": "file",
+                  "value": [
+                    "/Users/shravanmechineni/Downloads/CC015C_Less_Than_20MB_New_XI.xml"
+                  ],
+                  "enabled": true
+                }
+              ],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTXI1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"POST IE015 must return response code is 204\", function () {\n    expect(res.getStatus()).to.equal(204);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET ALL IE015 - IE928 -- IE028 -- IE029",
+          "seq": 3,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures/67cebe54c5804c20/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get all messages must return status code 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "04 - Simplified Departure Multiple house consignment to multiple consignee",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "04 - Simplified Departure Multiple house consignment to multiple consignee"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "02- GET IE015 dept Id",
+          "seq": 4,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures/67cecbc711ad5301/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Empty body to Small API",
+          "seq": 1,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 202 Accepted\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\ntest(\"Response body is JSON\", function() {\n//     expect(pm.response.to.have.jsonBody());\n});\n\ntest(\"Response body\", function () {\n    let responseJson = res.getBody();\n    bru.setEnvVar(\"upscan_url\",responseJson.uploadRequest.href)\n  \n    bru.setVar(\"x-amz-credential\", responseJson.uploadRequest.fields[\"x-amz-credential\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-response\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-response\"]);\n    bru.setVar(\"x-amz-meta-original-filename\", responseJson.uploadRequest.fields[\"x-amz-meta-original-filename\"]);\n    bru.setVar(\"x-amz-algorithm\", responseJson.uploadRequest.fields[\"x-amz-algorithm\"]);\n    bru.setVar(\"x-amz-signature\", responseJson.uploadRequest.fields[\"x-amz-signature\"]);\n    bru.setVar(\"x-amz-meta-session-id\", responseJson.uploadRequest.fields[\"x-amz-meta-session-id\"]);\n    bru.setVar(\"x-amz-meta-callback-url\", responseJson.uploadRequest.fields[\"x-amz-meta-callback-url\"]);\n    bru.setVar(\"x-amz-date\", responseJson.uploadRequest.fields[\"x-amz-date\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-received\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-received\"]);\n    bru.setVar(\"x-amz-meta-request-id\", responseJson.uploadRequest.fields[\"x-amz-meta-request-id\"]);\n    bru.setVar(\"key\", responseJson.uploadRequest.fields[\"key\"]);\n    bru.setVar(\"acl\", responseJson.uploadRequest.fields[\"acl\"]);\n    bru.setVar(\"x-amz-meta-consuming-service\", responseJson.uploadRequest.fields[\"x-amz-meta-consuming-service\"]);\n    bru.setVar(\"policy\", responseJson.uploadRequest.fields[\"policy\"]);\n\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified -8 -9-3 mb- via Upscan",
+          "seq": 2,
+          "request": {
+            "url": "{{upscan_url}}",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "multipartForm",
+              "formUrlEncoded": [],
+              "multipartForm": [
+                {
+                  "type": "text",
+                  "name": "x-amz-credential",
+                  "value": "{{x-amz-credential}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-response",
+                  "value": "{{x-amz-meta-upscan-initiate-response}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-original-filename",
+                  "value": "{{x-amz-meta-original-filename}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-algorithm",
+                  "value": "{{x-amz-algorithm}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-signature",
+                  "value": "{{x-amz-signature}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-session-id",
+                  "value": "{{x-amz-meta-session-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-callback-url",
+                  "value": "{{x-amz-meta-callback-url}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-date",
+                  "value": "{{x-amz-date}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-received",
+                  "value": "{{x-amz-meta-upscan-initiate-received}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-request-id",
+                  "value": "{{x-amz-meta-request-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "key",
+                  "value": "{{key}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "acl",
+                  "value": "{{acl}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-consuming-service",
+                  "value": "{{x-amz-meta-consuming-service}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "policy",
+                  "value": "{{policy}}",
+                  "enabled": true
+                },
+                {
+                  "type": "file",
+                  "name": "file",
+                  "value": [
+                    "/Users/shravanmechineni/Downloads/Bruno-collections/CC015C_Less_Than_20MB_New_XI.xml"
+                  ],
+                  "enabled": true
+                }
+              ],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTXI1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"POST IE015 must return response code is 204\", function () {\n    expect(res.getStatus()).to.equal(204);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "03 - Simplified Departure Single house consignment to single consignee",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "03 - Simplified Departure Single house consignment to single consignee"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "03- GET ALL IE015 - IE928 -- IE028 -- IE029",
+          "seq": 3,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures/67cecaf2b30e82be/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get all messages must return status code 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified -2KB- via Upscan",
+          "seq": 2,
+          "request": {
+            "url": "{{upscan_url}}",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "multipartForm",
+              "formUrlEncoded": [],
+              "multipartForm": [
+                {
+                  "type": "text",
+                  "name": "x-amz-credential",
+                  "value": "{{x-amz-credential}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-response",
+                  "value": "{{x-amz-meta-upscan-initiate-response}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-original-filename",
+                  "value": "{{x-amz-meta-original-filename}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-algorithm",
+                  "value": "{{x-amz-algorithm}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-signature",
+                  "value": "{{x-amz-signature}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-session-id",
+                  "value": "{{x-amz-meta-session-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-callback-url",
+                  "value": "{{x-amz-meta-callback-url}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-date",
+                  "value": "{{x-amz-date}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-upscan-initiate-received",
+                  "value": "{{x-amz-meta-upscan-initiate-received}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-request-id",
+                  "value": "{{x-amz-meta-request-id}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "key",
+                  "value": "{{key}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "acl",
+                  "value": "{{acl}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "x-amz-meta-consuming-service",
+                  "value": "{{x-amz-meta-consuming-service}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "policy",
+                  "value": "{{policy}}",
+                  "enabled": true
+                },
+                {
+                  "type": "file",
+                  "name": "file",
+                  "value": [
+                    "/Users/shravanmechineni/Downloads/Bruno-collections/CC015C_valid_2KB_New_XI.xml"
+                  ],
+                  "enabled": true
+                }
+              ],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTXI1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"POST IE015 must return response code is 204\", function () {\n    expect(res.getStatus()).to.equal(204);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Empty body to Small API",
+          "seq": 1,
+          "request": {
+            "url": "{{baseUrlContext}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.1+json",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 202 Accepted\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\ntest(\"Response body is JSON\", function() {\n//     expect(pm.response.to.have.jsonBody());\n});\n\ntest(\"Response body\", function () {\n    let responseJson = res.getBody();\n    bru.setEnvVar(\"upscan_url\",responseJson.uploadRequest.href)\n  \n    bru.setVar(\"x-amz-credential\", responseJson.uploadRequest.fields[\"x-amz-credential\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-response\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-response\"]);\n    bru.setVar(\"x-amz-meta-original-filename\", responseJson.uploadRequest.fields[\"x-amz-meta-original-filename\"]);\n    bru.setVar(\"x-amz-algorithm\", responseJson.uploadRequest.fields[\"x-amz-algorithm\"]);\n    bru.setVar(\"x-amz-signature\", responseJson.uploadRequest.fields[\"x-amz-signature\"]);\n    bru.setVar(\"x-amz-meta-session-id\", responseJson.uploadRequest.fields[\"x-amz-meta-session-id\"]);\n    bru.setVar(\"x-amz-meta-callback-url\", responseJson.uploadRequest.fields[\"x-amz-meta-callback-url\"]);\n    bru.setVar(\"x-amz-date\", responseJson.uploadRequest.fields[\"x-amz-date\"]);\n    bru.setVar(\"x-amz-meta-upscan-initiate-received\", responseJson.uploadRequest.fields[\"x-amz-meta-upscan-initiate-received\"]);\n    bru.setVar(\"x-amz-meta-request-id\", responseJson.uploadRequest.fields[\"x-amz-meta-request-id\"]);\n    bru.setVar(\"key\", responseJson.uploadRequest.fields[\"key\"]);\n    bru.setVar(\"acl\", responseJson.uploadRequest.fields[\"acl\"]);\n    bru.setVar(\"x-amz-meta-consuming-service\", responseJson.uploadRequest.fields[\"x-amz-meta-consuming-service\"]);\n    bru.setVar(\"policy\", responseJson.uploadRequest.fields[\"policy\"]);\n\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "activeEnvironmentUid": "S0okBSfBl59sqe6UHAUKr",
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      },
+      "vars": {
+        "req": [
+          {
+            "name": "DatOfPreMES9",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "YxuuP9oVIndkR8kbAwJfX"
+          },
+          {
+            "name": "TimOfPreMES10",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "W6Aut5IiDDd8P7OmfiL5s"
+          },
+          {
+            "name": "DecDatHEA383",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "oGIuNMG1pV2QWyH9j9Eze"
+          },
+          {
+            "name": "ArrTimTRACUS085",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "TrruRqlTj99tPDP80y6y2"
+          },
+          {
+            "name": "DatLimERS69",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "KcrIci4uzBRSHBmHPrinS"
+          },
+          {
+            "name": "RefNumHEA4",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "UE1b8JCpVWBQIXCfmWeYZ"
+          },
+          {
+            "name": "IntConRefMES11",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "XmWCKGHydNrvssU6onDar"
+          },
+          {
+            "name": "preparationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "AVwe1M0tHBsQ1gXqDso3D"
+          },
+          {
+            "name": "ArrNotDatHEA141",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "616rSahqKlb2uwUu0AhYR"
+          },
+          {
+            "name": "UnlDatREM67",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "suzcweYiMyGT9rj8pFKBF"
+          },
+          {
+            "name": "LRN",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "Ru21jpIsAJgBQZXSLTaTM"
+          },
+          {
+            "name": "limitDate",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "9qcpyrnoCzwkGEc5J3HjO"
+          },
+          {
+            "name": "arrivalTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "fOaeFmCPK8htHdzXGJHBA"
+          },
+          {
+            "name": "messageIdentification",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "c1blRLbI8UbKgIw8ltVp8"
+          },
+          {
+            "name": "requestDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "s0BsSf1v4waAeUSyYLLkG"
+          },
+          {
+            "name": "decisionDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "CWJckkpwLlBuM4hrpxQ8l"
+          },
+          {
+            "name": "arrivalNotificationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "MtguCfEysb2r5LSriJsuc"
+          },
+          {
+            "name": "unloadingDate",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "MtOhIrbcAHNNRseO6vAZG"
+          }
+        ]
+      }
+    },
+    "meta": {
+      "name": "13_P5 (SIT) Large Messages E2E Testing XI"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "13_P5 (SIT) Large Messages E2E Testing XI",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}
