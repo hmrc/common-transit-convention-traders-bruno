@@ -1,0 +1,3203 @@
+{
+  "name": "02_Bearer Token CTC API",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "Auth_Dev_W-o_Enrolment",
+      "root": {
+        "meta": {
+          "name": "Auth_Dev_W/o_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST Auth Details 303",
+          "seq": 1,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.development.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMCE-NCTS-ORG",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "VATRegNoTURN",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999999901",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": false
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST Auth Details 200",
+          "seq": 2,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.development.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMCE-NCTS-ORG",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "VATRegNoTURN",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999999901",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": false
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 3,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 4,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token",
+          "seq": 5,
+          "request": {
+            "url": "https://api.{{env}}.tax.service.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_Dev_With_Enrolment",
+      "root": {
+        "meta": {
+          "name": "Auth_Dev_With_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01-POST Auth Details 303",
+          "seq": 1,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.development.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{eori}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": " req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02-POST Auth Details 200",
+          "seq": 2,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.development.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{eori}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 3,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}\n",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 4,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token",
+          "seq": 5,
+          "request": {
+            "url": "https://api.{{env}}.tax.service.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_Local_With_Enrolment",
+      "root": {
+        "meta": {
+          "name": "Auth_Local_With_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "POST Auth Bearer Token 200",
+          "seq": 2,
+          "request": {
+            "url": "{{auth_base_url}}/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "authorityId",
+                  "value": "",
+                  "enabled": true
+                },
+                {
+                  "name": "redirectionUrl",
+                  "value": "{{auth_base_url}}/auth-login-stub/session",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "50",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "{{affinityGroup}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "{{enrolment_name}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "{{enrolment_taxIdentifier_name}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{enrolment_taxIdentifier_value}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "setTimeout(function(){}, [200]);\nconst cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\nconst HTMLParser = require(\"node-html-parser\");\nconst responseBody = HTMLParser.parse(res.getBody()?.toString());\n\nconst bearerExtractionRegex = /((.+),)?Bearer ([^,\\s]+)(,.+)?$/g;\n\nconst token = responseBody.querySelector('td[data-session-id=\"authToken\"]').text.trim();\n\n// There should only be one match, so we just get it out by exploding the iterator and getting the first (and only) result.\nconst matches = [...token.matchAll(bearerExtractionRegex)][0];\n\n// Match 3 is the bearer token\nlet bearerToken = matches[3];\nif (matches[4]) {\n    // Match 4 is if GNAP appears after the bearer token\n    bearerToken += matches[4];\n}\n\nif (matches[2]) {\n    // Match 2 is if GNAP appears before the bearer token\n    bearerToken += \",\" + matches[2];\n}\n\n// bearerToken will now contain the bearer token (without Bearer) and the GNAP token.\nbru.setEnvVar(\"access_token\", bearerToken);\nbru.setGlobalEnvVar(\"access_token\", bearerToken);\ntest(\"Successful Bearer Token\", function () {\n    expect(bearerToken).not.equal(null);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "POST Auth Bearer Token 303",
+          "seq": 1,
+          "request": {
+            "url": "{{auth_base_url}}/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "authorityId",
+                  "value": "",
+                  "enabled": true
+                },
+                {
+                  "name": "redirectionUrl",
+                  "value": "{{auth_base_url}}/auth-login-stub/session",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "50",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "{{affinityGroup}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "{{enrolment_name}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "{{enrolment_taxIdentifier_name}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{enrolment_taxIdentifier_value}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "setTimeout(function(){}, [200]);\nreq.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "POST Create Client Application",
+          "seq": 3,
+          "request": {
+            "url": "{{3rdPartyBaseUrl}}/application",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"name\": \"TEST APP\",\n    \"access\": {\n        \"accessType\": \"STANDARD\",\n        \"redirectUris\": [],\n        \"overrides\": []\n    },\n    \"environment\": \"SANDBOX\",\n    \"collaborators\": [\n        {\n            \"emailAddress\": \"test@test.com\",\n            \"role\": \"ADMINISTRATOR\",\n            \"userId\": \"{{user_id}}\"\n        }\n    ]\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const { v4: uuidv4 } = require('uuid');\nconst userId=uuidv4();\nbru.setEnvVar(\"user_id\", userId);"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 201\", () => {\n    expect(res.getStatus()).to.equal(201);\n});\n\nvar data = res.getBody();\nbru.setGlobalEnvVar(\"clientId\", data.details.clientId);",
+            "docs": "Creates a client application in the third party application api to ensure we have a valid clientId",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "PUT API Subscription Field Values",
+          "seq": 6,
+          "request": {
+            "url": "{{apiSubscriptionFieldsBaseUrl}}/field/application/{{clientId}}/context/customs%2Ftransits/version/1.0",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"fields\": {\n        \"notificationUrl\": \"http://localhost:10202/push-pull-notification-receiver-stub/notifications\"\n    }\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200 or 201\", function () {\n    expect(res.getStatus()).to.be.oneOf([200, 201]);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "PUT API Subscription Fields",
+          "seq": 5,
+          "request": {
+            "url": "{{apiSubscriptionFieldsBaseUrl}}/definition/context/customs%2Ftransits/version/1.0",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"fieldDefinitions\": [\n        {\n            \"name\": \"notificationUrl\",\n            \"shortDescription\": \"Notification URL\",\n            \"description\": \"What is your notification web address for us to send push notifications to?\",\n            \"type\": \"PPNSField\",\n            \"hint\": \"You must only give us a web address that you own. Your application will use this address to listen to notifications from HMRC.\",\n            \"validation\": {\n                \"errorMessage\": \"notificationUrl must be a valid https URL\",\n                \"rules\": [\n                    {\n                        \"UrlValidationRule\": {}\n                    }\n                ]\n            }\n        }\n    ]\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200 or 201\", function () {\n    expect(res.getStatus()).to.be.oneOf([200, 201]);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "PUT Create Notification Box",
+          "seq": 4,
+          "request": {
+            "url": "{{basePushPullUrl}}/box",
+            "method": "PUT",
+            "headers": [
+              {
+                "name": "User-Agent",
+                "value": "transit-movements-trader-at-destination",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"boxName\": \"customs/transits##1.0##notificationUrl\",\n    \"clientId\": \"{{clientId}}\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200 or 201\", function () {\n    expect(res.getStatus()).to.be.oneOf([200, 201]);\n});\n\nvar data = res.getBody();\nbru.setEnvVar(\"boxId\", data.boxId);\n",
+            "docs": "Prelude request that sets up a notification box in the push-pull-notification api for our notifications to be pushed to",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_Local_W-o_Enrolment",
+      "root": {
+        "meta": {
+          "name": "Auth_Local_W/o_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "POST Auth Bearer Token 200",
+          "seq": 2,
+          "request": {
+            "url": "{{auth_base_url}}/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "authorityId",
+                  "value": "",
+                  "enabled": true
+                },
+                {
+                  "name": "redirectionUrl",
+                  "value": "{{auth_base_url}}/auth-login-stub/session",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "50",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "{{affinityGroup}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "setTimeout(function(){}, [200]);\nconst cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}\n",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\nconst HTMLParser = require(\"node-html-parser\");\nconst responseBody = HTMLParser.parse(res.getBody()?.toString());\n\nconst bearerExtractionRegex = /((.+),)?Bearer ([^,\\s]+)(,.+)?$/g;\n\nconst token = responseBody.querySelector('td[data-session-id=\"authToken\"]').text.trim();\n\n// There should only be one match, so we just get it out by exploding the iterator and getting the first (and only) result.\nconst matches = [...token.matchAll(bearerExtractionRegex)][0];\n\n// Match 3 is the bearer token\nlet bearerToken = matches[3];\nif (matches[4]) {\n    // Match 4 is if GNAP appears after the bearer token\n    bearerToken += matches[4];\n}\n\nif (matches[2]) {\n    // Match 2 is if GNAP appears before the bearer token\n    bearerToken += \",\" + matches[2];\n}\n\n// bearerToken will now contain the bearer token (without Bearer) and the GNAP token.\nbru.setEnvVar(\"access_token1\", bearerToken);\nbru.setGlobalEnvVar(\"access_token1\", bearerToken);\ntest(\"Successful Bearer Token\", function () {\n    expect(bearerToken).not.equal(null);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "POST Auth Bearer Token 303",
+          "seq": 1,
+          "request": {
+            "url": "{{auth_base_url}}/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "authorityId",
+                  "value": "",
+                  "enabled": true
+                },
+                {
+                  "name": "redirectionUrl",
+                  "value": "{{auth_base_url}}/auth-login-stub/session",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "50",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "{{affinityGroup}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "setTimeout(function(){}, [200]);\nreq.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});\n\n// var responseBody = cheerio.load(res.getBody()?.toString());\n\n// const bearerExtractionRegex = /((.+),)?Bearer ([^,\\s]+)(,.+)?$/g;\n\n// const token = responseBody('td[data-session-id=\"authToken\"]').text().trim();\n\n// // There should only be one match, so we just get it out by exploding the iterator and getting the first (and only) result.\n// const matches = [...token.matchAll(bearerExtractionRegex)][0];\n\n// // Match 3 is the bearer token\n// let bearerToken = matches[3];\n// if (matches[4]) {\n//     // Match 4 is if GNAP appears after the bearer token\n//     bearerToken += matches[4];\n// }\n\n// if (matches[2]) {\n//     // Match 2 is if GNAP appears before the bearer token\n//     bearerToken += \",\" + matches[2];\n// }\n\n// // bearerToken will now contain the bearer token (without Bearer) and the GNAP token.\n// bru.setEnvVar(\"access_token1\", bearerToken);\n// test(\"Successful Bearer Token\", function () {\n//     expect(bearerToken).not.equal(null);\n// });",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "POST Create Client Application",
+          "seq": 3,
+          "request": {
+            "url": "{{3rdPartyBaseUrl}}/application",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"name\": \"TEST APP\",\n    \"access\": {\n        \"accessType\": \"STANDARD\",\n        \"redirectUris\": [],\n        \"overrides\": []\n    },\n    \"environment\": \"SANDBOX\",\n    \"collaborators\": [\n        {\n            \"emailAddress\": \"test@test.com\",\n            \"role\": \"ADMINISTRATOR\",\n            \"userId\": \"{{user_id}}\"\n        }\n    ]\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const { v4: uuidv4 } = require('uuid');\nconst userId=uuidv4();\nbru.setEnvVar(\"user_id\", userId);"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 201\", () => {\n    expect(res.getStatus()).to.equal(201);\n});\n\nconst jsonData = res.getBody();\nbru.setEnvVar(\"clientId\", jsonData.details.clientId);",
+            "docs": "Creates a client application in the third party application api to ensure we have a valid clientId",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearer_token}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "PUT API Subscription Field Values",
+          "seq": 6,
+          "request": {
+            "url": "{{apiSubscriptionFieldsBaseUrl}}/field/application/{{clientId}}/context/customs%2Ftransits/version/1.0",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"fields\": {\n        \"notificationUrl\": \"http://localhost:10202/push-pull-notification-receiver-stub/notifications\"\n    }\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200 or 201\", function () {\n    expect(res.getStatus()).to.be.oneOf([200, 201]);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "PUT API Subscription Fields",
+          "seq": 5,
+          "request": {
+            "url": "{{apiSubscriptionFieldsBaseUrl}}/definition/context/customs%2Ftransits/version/1.0",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"fieldDefinitions\": [\n        {\n            \"name\": \"notificationUrl\",\n            \"shortDescription\": \"Notification URL\",\n            \"description\": \"What is your notification web address for us to send push notifications to?\",\n            \"type\": \"PPNSField\",\n            \"hint\": \"You must only give us a web address that you own. Your application will use this address to listen to notifications from HMRC.\",\n            \"validation\": {\n                \"errorMessage\": \"notificationUrl must be a valid https URL\",\n                \"rules\": [\n                    {\n                        \"UrlValidationRule\": {}\n                    }\n                ]\n            }\n        }\n    ]\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200 or 201\", function () {\n    expect(res.getStatus()).to.be.oneOf([200, 201]);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "PUT Create Notification Box",
+          "seq": 4,
+          "request": {
+            "url": "{{basePushPullUrl}}/box",
+            "method": "PUT",
+            "headers": [
+              {
+                "name": "User-Agent",
+                "value": "transit-movements-trader-at-destination",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"boxName\": \"customs/transits##1.0##notificationUrl\",\n    \"clientId\": \"{{clientId}}\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200 or 201\", function () {\n    expect(res.getStatus()).to.be.oneOf([200, 201]);\n});\n\nvar jsonData = res.getBody();\nbru.setEnvVar(\"boxId\", jsonData.boxId);\n",
+            "docs": "Prelude request that sets up a notification box in the push-pull-notification api for our notifications to be pushed to",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearer_token}}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_QA_W-o_Enrolment",
+      "root": {
+        "request": {
+          "script": {
+            "req": "setTimeout(function(){}, [200]);"
+          }
+        },
+        "meta": {
+          "name": "Auth_QA_W/o_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST Auth Details 303",
+          "seq": 1,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.qa.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMCE-NCTS-ORG",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "VATRegNoTURN",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999999911",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": false
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST Auth Details 200",
+          "seq": 2,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.qa.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMCE-NCTS-ORG",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "VATRegNoTURN",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999999911",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": false
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 4,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 3,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token2",
+          "seq": 5,
+          "request": {
+            "url": "https://api.{{env}}.tax.service.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_QA_With_Enrolment",
+      "root": {
+        "request": {
+          "script": {
+            "req": "setTimeout(function(){}, [200]);"
+          }
+        },
+        "meta": {
+          "name": "Auth_QA_With_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST Auth Details 303",
+          "seq": 1,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.qa.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support common-transit-convention-guarantee-balance&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999912345",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST Auth Details 200",
+          "seq": 2,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.qa.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support common-transit-convention-guarantee-balance&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999912345",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 3,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 4,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token",
+          "seq": 5,
+          "request": {
+            "url": "https://api.{{env}}.tax.service.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_Staging_W-o_Enrolment",
+      "root": {
+        "meta": {
+          "name": "Auth_Staging_W/o_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST Auth Details 303",
+          "seq": 1,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.staging.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMCE-NCTS-ORG",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "VATRegNoTURN",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999999901",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": false
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST Auth Details 200",
+          "seq": 2,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.staging.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMCE-NCTS-ORG",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "VATRegNoTURN",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "9999999901",
+                  "enabled": false
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": false
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 5,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}\n\n",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 6,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token",
+          "seq": 7,
+          "request": {
+            "url": "https://api.{{env}}.tax.service.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_Staging_With_Enrolment",
+      "root": {
+        "meta": {
+          "name": "Auth_Staging_With_Enrolment"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST Auth Details 303",
+          "seq": 2,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.staging.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support common-transit-convention-guarantee-balance&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{eori}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST Auth Details 200",
+          "seq": 3,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://www.staging.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support common-transit-convention-guarantee-balance&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{eori}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 6,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}\n",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 7,
+          "request": {
+            "url": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token",
+          "seq": 8,
+          "request": {
+            "url": "https://api.{{env}}.tax.service.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_W-0_Enrolment_ET",
+      "root": {
+        "meta": {
+          "name": "Auth_W/0_Enrolment_ET"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST Auth Details 303",
+          "seq": 1,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://test-www.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST Auth Details 200",
+          "seq": 2,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://test-www.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 3,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}\n\n",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 4,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token",
+          "seq": 5,
+          "request": {
+            "url": "https://{{env}}-api.service.hmrc.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n\n\n\n\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Auth_With_Enrolment_ET",
+      "root": {
+        "meta": {
+          "name": "Auth_With_Enrolment_ET"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01-POST Auth Details 303",
+          "seq": 1,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://test-www.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support common-transit-convention-guarantee-balance&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{eori}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "req.setMaxRedirects(0);",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 303\", function () {\n    expect(res.getStatus()).to.equal(303);\n});",
+            "docs": "This endpoint need to be called twice. \n1. Send the request using the req.setMaxRedirects(0); in Pre-request script.\n2. Send the request again by commenting the req.setMaxRedirects(0); in Pre-request script.\n\nThis is how the next oauth/grantscope request is being satisifeld with the cookies generated from the above requests. ",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET Grant Auth",
+          "seq": 3,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "auth_id",
+                "value": "{{auth_id}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "text",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}\n\n",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nconst csrfToken = root.querySelector(\"[name='csrfToken']\").getAttribute('value');\nbru.setEnvVar(\"csrfToken\",csrfToken);\n\nbru.setGlobalEnvVar(\"csrfToken\",csrfToken)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02-POST Auth Details 200",
+          "seq": 2,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              },
+              {
+                "name": "",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "redirectionUrl",
+                  "value": "https://test-www.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-traders common-transit-convention-traders-test-support common-transit-convention-guarantee-balance&response_type=code",
+                  "enabled": true
+                },
+                {
+                  "name": "credentialStrength",
+                  "value": "strong",
+                  "enabled": true
+                },
+                {
+                  "name": "confidenceLevel",
+                  "value": "200",
+                  "enabled": true
+                },
+                {
+                  "name": "nino",
+                  "value": "AA000000A",
+                  "enabled": true
+                },
+                {
+                  "name": "affinityGroup",
+                  "value": "Individual",
+                  "enabled": true
+                },
+                {
+                  "name": "authorityId",
+                  "value": "abcd",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].name",
+                  "value": "HMRC-CTC-ORG",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].name",
+                  "value": "EORINumber",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].taxIdentifier[0].value",
+                  "value": "{{eori}}",
+                  "enabled": true
+                },
+                {
+                  "name": "enrolment[0].state",
+                  "value": "Activated",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}",
+              "res": "const cookies = res.getHeader('set-cookie');\n\nif(cookies) {\n  bru.setVar(\"cookie\", cookies.join('; '));\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody());\n\nconst $hrefpath = root.querySelector('div a[data-module=\"govuk-button\"]').getAttribute('href');\n\nvar hrefpath = $hrefpath.split(\"=\")[1];\nbru.setEnvVar(\"auth_id\",hrefpath)\n\nbru.setGlobalEnvVar(\"auth_id\",hrefpath)\n",
+            "docs": "This endpoint need to be called twice. \n1. Send the request using the req.setMaxRedirects(0); in Pre-request script.\n2. Send the request again by commenting the req.setMaxRedirects(0); in Pre-request script.\n\nThis is how the next oauth/grantscope request is being satisifeld with the cookies generated from the above requests. ",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST Submit Grant Authority",
+          "seq": 4,
+          "request": {
+            "url": "https://{{env}}-www.tax.service.gov.uk/oauth/grantscope",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "csrfToken",
+                  "value": "{{csrfToken}}",
+                  "enabled": true
+                },
+                {
+                  "name": "auth_id",
+                  "value": "{{auth_id}}",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const cookie = bru.getVar(\"cookie\");\n\nif(cookie) {\n  req.setHeader(\"Cookie\", cookie)\n}"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\nconst HTMLParser = require(\"node-html-parser\");\nconst root = HTMLParser.parse(res.getBody()?.toString());\n\nvar str = root.querySelector(\"head > title\").text.split(\"=\")[1]\n\nvar code = str.replaceAll(/GOV.UK/g,\"\")\nbru.setEnvVar(\"code\",code);\n\nbru.setGlobalEnvVar(\"code\",code)",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- Access Token",
+          "seq": 5,
+          "request": {
+            "url": "https://{{env}}-api.service.hmrc.gov.uk/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "formUrlEncoded",
+              "formUrlEncoded": [
+                {
+                  "name": "code",
+                  "value": "{{code}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_id",
+                  "value": "{{client_Id}}",
+                  "enabled": true
+                },
+                {
+                  "name": "client_secret",
+                  "value": "{{client_secret}}",
+                  "enabled": true
+                },
+                {
+                  "name": "grant_type",
+                  "value": "authorization_code",
+                  "enabled": true
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": "urn:ietf:wg:oauth:2.0:oob",
+                  "enabled": true
+                }
+              ],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n// var accessToken = JSON.parse(res.getBody()?.toString());\n\nvar data = res.getBody();\n\nbru.setEnvVar(\"access_token\", data.access_token);\n\nbru.setGlobalEnvVar(\"access_token\", data.access_token);\n\n\n\n\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      },
+      "script": {
+        "req": "setTimeout(function(){}, [200]);"
+      }
+    },
+    "meta": {
+      "name": "02_Bearer Token CTC API"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "02_Bearer Token CTC API",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "scripts": {
+      "moduleWhitelist": [
+        "buffer",
+        "assert",
+        "net",
+        "querystring",
+        "events",
+        "diagnostics_channel",
+        "async_hooks",
+        "console",
+        "node-html-parser"
+      ],
+      "filesystemAccess": {
+        "allow": true
+      }
+    },
+    "size": 0.05285072326660156,
+    "filesCount": 63
+  }
+}
