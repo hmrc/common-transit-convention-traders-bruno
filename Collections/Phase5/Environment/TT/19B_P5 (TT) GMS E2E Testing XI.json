@@ -1,0 +1,504 @@
+{
+  "name": "19B_P5 (TT) GMS E2E Testing XI",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "01 - Guarantee Balance Enquiry Type0",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "01 - Guarantee Balance Enquiry Type0"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check Send within 60 mins",
+          "seq": 2,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000655",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check Type0",
+          "seq": 1,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000655",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Invalid Access Codea and valid GRN Balance Check",
+          "seq": 4,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000655",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC00\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Invalid GRN Balance Check",
+          "seq": 3,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000656",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "02 - Guarantee Balance Enquiry Type1",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "02 - Guarantee Balance Enquiry Type1"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check Send within 60 mins",
+          "seq": 2,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000664",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check Type1",
+          "seq": 1,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000664",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Invalid Access Codea and valid GRN Balance Check",
+          "seq": 4,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000664",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC00\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Invalid GRN Balance Check",
+          "seq": 3,
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000665",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      },
+      "vars": {
+        "req": [
+          {
+            "name": "LRN",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "OhRymu6ShyfmlgFuwqqxT"
+          },
+          {
+            "name": "limitDate",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "VMf0bhILo8Lh3yI3Y9Rri"
+          },
+          {
+            "name": "preparationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "yL0FGDG87RXbIlqJ2ny4P"
+          },
+          {
+            "name": "arrivalTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "8s1JIGRTnO5x8SV2K6lXP"
+          },
+          {
+            "name": "messageIdentification",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "NgL0NNMF7UtemviX0rO0U"
+          },
+          {
+            "name": "arrivalNotificationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "7kjVaVJtpFFVxFxYpxlz1"
+          }
+        ]
+      }
+    },
+    "meta": {
+      "name": "19B_P5 (TT) GMS E2E Testing XI"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "19B_P5 (TT) GMS E2E Testing XI",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}
