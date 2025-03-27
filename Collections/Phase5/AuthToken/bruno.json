@@ -1,0 +1,25 @@
+{
+  "version": "1",
+  "name": "02_Bearer Token CTC API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ],
+  "scripts": {
+    "moduleWhitelist": [
+      "buffer",
+      "assert",
+      "net",
+      "querystring",
+      "events",
+      "diagnostics_channel",
+      "async_hooks",
+      "console",
+      "node-html-parser"
+    ],
+    "filesystemAccess": {
+      "allow": true
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "02_Bearer Token CTC API",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^2.1.0",
+    "node-html-parser": "^7.0.1"
+  }
+}
