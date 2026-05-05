@@ -1,0 +1,2199 @@
+{
+  "name": "19 - GMS E2E Testing XI - SIT",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "01 - Guarantee Balance after release for transit GRN Type 1 Copy",
+      "filename": "01 - Guarantee Balance after release for transit GRN Type 1 Copy",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "01 - Guarantee Balance after release for transit GRN Type 1 Copy"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check",
+          "filename": "01- POST GRN Balance Check.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "24XI00000100002B2",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST IE015 Normal",
+          "filename": "02- POST IE015 Normal.bru",
+          "seq": 3,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\n        <bindingItinerary>0</bindingItinerary>\n        <!--         <limitDate>{{limitDate}}</limitDate> -->\n    </TransitOperation>\n    <!--     <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500663</referenceNumber>\n    </Authorisation> -->\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000142</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407741</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>1</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>24XI00000100002B2</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <!-- <inlandModeOfTransport>4</inlandModeOfTransport>\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder> -->\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407741</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n            <GoodsReference>\n                <sequenceNumber>1</sequenceNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n            </GoodsReference>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>C</typeOfLocation>\n            <qualifierOfIdentification>U</qualifierOfIdentification>\n            <UNLocode>GBBEL</UNLocode>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>40</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <UNLocode>ADENC</UNLocode>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <!-- <countryOfDestination>GB</countryOfDestination> -->\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.000</grossMass>\n                        <netMass>950.000</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTXI1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST IE015 Simplified",
+          "filename": "02- POST IE015 Simplified.bru",
+          "seq": 2,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\n        <bindingItinerary>0</bindingItinerary>\n        <limitDate>{{limitDate}}</limitDate>\n    </TransitOperation>\n    <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500663</referenceNumber>\n    </Authorisation>\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000142</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407741</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>1</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>24XI00000100002B2</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <!-- <inlandModeOfTransport>4</inlandModeOfTransport>\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder> -->\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407741</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n            <GoodsReference>\n                <sequenceNumber>1</sequenceNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n            </GoodsReference>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>B</typeOfLocation>\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\n            <authorisationNumber>XIDEPBT13ET</authorisationNumber>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>40</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <UNLocode>ADENC</UNLocode>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <!-- <countryOfDestination>GB</countryOfDestination> -->\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.000</grossMass>\n                        <netMass>950.000</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTXI1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- GET IE015 --IE928--IE028--Ie029",
+          "filename": "03- GET IE015 --IE928--IE028--Ie029.bru",
+          "seq": 4,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures/69d7c13b5596b3d8/messages/",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "04- POST GRN Balance Post Check",
+          "filename": "04- POST GRN Balance Post Check.bru",
+          "seq": 5,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000152",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "05- POST IE007 Normal",
+          "filename": "05- POST IE007 Normal.bru",
+          "seq": 6,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC007C PhaseID=\"NCTS6\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.GB</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC007C</messageType>\n    <TransitOperation>\n        <MRN>26XI000142QQ9Y5CJ3</MRN>\n        <arrivalNotificationDateAndTime>{{arrivalNotificationDateAndTime}}</arrivalNotificationDateAndTime>\n        <simplifiedProcedure>1</simplifiedProcedure>\n        <!--         <incidentFlag>0</incidentFlag> -->\n    </TransitOperation>\n    <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C522</type>\n        <referenceNumber>GBACE24A1500662</referenceNumber>\n    </Authorisation>\n    <CustomsOfficeOfDestinationActual>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationActual>\n    <TraderAtDestination>\n        <identificationNumber>GB240119792000</identificationNumber>\n    </TraderAtDestination>\n    <Consignment>\n        <LocationOfGoods>\n            <typeOfLocation>B</typeOfLocation>\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\n            <authorisationNumber>GB DES BT1 3ET</authorisationNumber>\n        </LocationOfGoods>\n    </Consignment>\n</ncts:CC007C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\n\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalNotificationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))\n"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar arrivalId =  jsonData._links.self.href.split(\"/\")[5]\n\nbru.setEnvVar(\"arrivalId\",arrivalId);\n\n\ntest(\"Status code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\nif (res.getStatus() !== 202) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "06- GET ALL IE007 -- IE025 -- IE045",
+          "filename": "06- GET ALL IE007 -- IE025 -- IE045.bru",
+          "seq": 7,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals/69d7dc4b8f64c865/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get all messages must return status code 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "07- POST GRN Balance Post Check",
+          "filename": "07- POST GRN Balance Post Check.bru",
+          "seq": 8,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000152",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "02 - Guarantee Balance after release for transit (GRN type 4 Negative) Copy",
+      "filename": "02 - Guarantee Balance after release for transit -GRN type 4 Negative- Copy",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "02 - Guarantee Balance after release for transit (GRN type 4 Negative) Copy"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check",
+          "filename": "01- POST GRN Balance Check.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000199",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified",
+          "filename": "01- POST IE015 Simplified.bru",
+          "seq": 2,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\n        <bindingItinerary>0</bindingItinerary>\n        <limitDate>{{limitDate}}</limitDate>\n    </TransitOperation>\n    <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500663</referenceNumber>\n    </Authorisation>\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000142</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407741</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>4</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>23XI0000010000199</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <!-- <inlandModeOfTransport>4</inlandModeOfTransport>\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder> -->\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407741</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n            <GoodsReference>\n                <sequenceNumber>1</sequenceNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n            </GoodsReference>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>B</typeOfLocation>\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\n            <authorisationNumber>XIDEPBT13ET</authorisationNumber>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>40</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <UNLocode>ADENC</UNLocode>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <!-- <countryOfDestination>GB</countryOfDestination> -->\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.000</grossMass>\n                        <netMass>950.000</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- GET IE015 --IE928--IE028--Ie029 -- IE114 -- IE118",
+          "filename": "02- GET IE015 --IE928--IE028--Ie029 -- IE114 -- IE118.bru",
+          "seq": 3,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures/64df5099652a1aff/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "07 - Guarantee Balance after release for transit Multiple GRN types 0 1",
+      "filename": "07 - Guarantee Balance after release for transit Multiple GRN types 0 1",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "07 - Guarantee Balance after release for transit Multiple GRN types 0 1"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check GRN Type 0",
+          "filename": "01- POST GRN Balance Check GRN Type 0.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "25XI00000100004A5",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Normal",
+          "filename": "01- POST IE015 Normal.bru",
+          "seq": 4,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\n        <bindingItinerary>0</bindingItinerary>\n<!--         <limitDate>{{limitDate}}</limitDate> -->\n    </TransitOperation>\n<!--     <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500663</referenceNumber>\n    </Authorisation> -->\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000142</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407741</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>0</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>25XI00000100004A5</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n  <Guarantee>\n        <sequenceNumber>2</sequenceNumber>\n        <guaranteeType>1</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>24XI00000100002B2</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <!-- <inlandModeOfTransport>4</inlandModeOfTransport>\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder> -->\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407741</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n            <GoodsReference>\n                <sequenceNumber>1</sequenceNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n            </GoodsReference>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>C</typeOfLocation>\n            <qualifierOfIdentification>U</qualifierOfIdentification>\n            <UNLocode>GBBEL</UNLocode>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>40</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <UNLocode>ADENC</UNLocode>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <!-- <countryOfDestination>GB</countryOfDestination> -->\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.000</grossMass>\n                        <netMass>950.000</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified",
+          "filename": "01- POST IE015 Simplified.bru",
+          "seq": 3,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\n        <bindingItinerary>0</bindingItinerary>\n        <limitDate>{{limitDate}}</limitDate>\n    </TransitOperation>\n    <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500663</referenceNumber>\n    </Authorisation>\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000142</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407741</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>0</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>25XI00000100004A5</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n  <Guarantee>\n        <sequenceNumber>2</sequenceNumber>\n        <guaranteeType>1</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>24XI00000100002B2</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <!-- <inlandModeOfTransport>4</inlandModeOfTransport>\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder> -->\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407741</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n            <GoodsReference>\n                <sequenceNumber>1</sequenceNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n            </GoodsReference>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>B</typeOfLocation>\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\n            <authorisationNumber>XIDEPBT13ET</authorisationNumber>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>40</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <UNLocode>ADENC</UNLocode>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <!-- <countryOfDestination>GB</countryOfDestination> -->\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.000</grossMass>\n                        <netMass>950.000</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- GET IE015 --IE928--IE028--Ie029- IE045",
+          "filename": "02- GET IE015 --IE928--IE028--Ie029- IE045.bru",
+          "seq": 5,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures/69d7e26f0016b38c/messages/",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST GRN Balance Check GRN Type 1",
+          "filename": "02- POST GRN Balance Check GRN Type 1.bru",
+          "seq": 2,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "24XI00000100002B2",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "06- GET ALL IE007 -- IE025",
+          "filename": "06- GET ALL IE007 -- IE025.bru",
+          "seq": 7,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals/67c0a498ff02c536/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get all messages must return status code 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "IE007 Normal",
+          "filename": "IE007 Normal.bru",
+          "seq": 6,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC007C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n  <messageSender>9999912345</messageSender>\n  <messageRecipient>NTA.GB</messageRecipient>\n  <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n  <messageIdentification>{{messageIdentification}}</messageIdentification>\n  <messageType>CC007C</messageType>\n  <TransitOperation>\n    <MRN>23XI0000813NP8DWJ4</MRN>\n    <arrivalNotificationDateAndTime>{{arrivalNotificationDateAndTime}}</arrivalNotificationDateAndTime>\n    <simplifiedProcedure>0</simplifiedProcedure>\n<!--     <incidentFlag>0</incidentFlag> -->\n  </TransitOperation>\n  <CustomsOfficeOfDestinationActual>\n    <referenceNumber>GB000246</referenceNumber>\n  </CustomsOfficeOfDestinationActual>\n  <TraderAtDestination>\n    <identificationNumber>GB954131533000</identificationNumber> \n  </TraderAtDestination>\n  <Consignment>\n    <LocationOfGoods>\n      <typeOfLocation>C</typeOfLocation>\n      <qualifierOfIdentification>U</qualifierOfIdentification>     \n      <UNLocode>GBBEL</UNLocode>\n    </LocationOfGoods>\n  </Consignment>\n</ncts:CC007C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\n\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalNotificationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))\n"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "06 - Guarantee Balance after release for transit Multiple GRN types 0 1 4",
+      "filename": "06 - Guarantee Balance after release for transit Multiple GRN types 0 1 4",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "06 - Guarantee Balance after release for transit Multiple GRN types 0 1 4"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check GRN Type 0",
+          "filename": "01- POST GRN Balance Check GRN Type 0.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "25XI00000100004A5",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified",
+          "filename": "01- POST IE015 Simplified.bru",
+          "seq": 4,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\n        <bindingItinerary>0</bindingItinerary>\n        <limitDate>{{limitDate}}</limitDate>\n    </TransitOperation>\n    <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500663</referenceNumber>\n    </Authorisation>\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000142</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407741</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>0</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>25XI00000100004A5</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n      <Guarantee>\n        <sequenceNumber>2</sequenceNumber>\n        <guaranteeType>1</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>24XI00000100002B2</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n      <Guarantee>\n        <sequenceNumber>3</sequenceNumber>\n        <guaranteeType>4</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>25XI0000010000572B123456</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <!-- <inlandModeOfTransport>4</inlandModeOfTransport>\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder> -->\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407741</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n            <GoodsReference>\n                <sequenceNumber>1</sequenceNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n            </GoodsReference>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>B</typeOfLocation>\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\n            <authorisationNumber>XIDEPBT13ET</authorisationNumber>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>40</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <UNLocode>ADENC</UNLocode>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <!-- <countryOfDestination>GB</countryOfDestination> -->\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.000</grossMass>\n                        <netMass>950.000</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- GET IE015 --IE928--IE028--Ie029- IE045",
+          "filename": "02- GET IE015 --IE928--IE028--Ie029- IE045.bru",
+          "seq": 5,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures/6888ced940d368d8/messages/6888cedc59da6770",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST GRN Balance Check GRN Type 1",
+          "filename": "02- POST GRN Balance Check GRN Type 1.bru",
+          "seq": 2,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "24XI00000100002B2",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- POST GRN Balance Check GRN Type 4",
+          "filename": "03- POST GRN Balance Check GRN Type 4.bru",
+          "seq": 3,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "25XI0000010000563A123456",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "06- GET ALL IE007 -- IE025",
+          "filename": "06- GET ALL IE007 -- IE025.bru",
+          "seq": 7,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals/650ab7d4ea0d7a88/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get all messages must return status code 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "IE007 Normal",
+          "filename": "IE007 Normal.bru",
+          "seq": 6,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC007C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n  <messageSender>9999912345</messageSender>\n  <messageRecipient>NTA.GB</messageRecipient>\n  <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n  <messageIdentification>{{messageIdentification}}</messageIdentification>\n  <messageType>CC007C</messageType>\n  <TransitOperation>\n    <MRN>24XI000081PHMRHZJ2</MRN>\n    <arrivalNotificationDateAndTime>{{arrivalNotificationDateAndTime}}</arrivalNotificationDateAndTime>\n    <simplifiedProcedure>0</simplifiedProcedure>\n    <incidentFlag>0</incidentFlag>\n  </TransitOperation>\n  <CustomsOfficeOfDestinationActual>\n    <referenceNumber>GB000246</referenceNumber>\n  </CustomsOfficeOfDestinationActual>\n  <TraderAtDestination>\n    <identificationNumber>GB201909015000</identificationNumber> \n  </TraderAtDestination>\n  <Consignment>\n    <LocationOfGoods>\n      <typeOfLocation>C</typeOfLocation>\n      <qualifierOfIdentification>U</qualifierOfIdentification>     \n      <UNLocode>GBBEL</UNLocode>\n    </LocationOfGoods>\n  </Consignment>\n</ncts:CC007C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\n\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalNotificationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))\n"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "08 - Guarantee Balance after release for transit Multiple GRN types 0 1 2",
+      "filename": "08 - Guarantee Balance after release for transit Multiple GRN types 0 1 2",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "08 - Guarantee Balance after release for transit Multiple GRN types 0 1 2"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check GRN Type 0",
+          "filename": "01- POST GRN Balance Check GRN Type 0.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "25XI00000100004A5",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "// const moment = require('moment');\n// let now = moment();\n// now.add('14', 'days');\n\n// let limitDate = now.format(\"YYYY-MM-DD\")\n\n// let arrivalTime = moment();\n// arrivalTime.add('14', 'days');\n\n// let LRN=\"TRATESTGB1\";\n// let charset = moment().format(\"YYMMDDHHmm\");\n\n// LRN += charset;\n\n// bru.setVar(\"LRN\", LRN);\n// bru.setVar(\"limitDate\", limitDate);\n// bru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\n// bru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\n// bru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified",
+          "filename": "01- POST IE015 Simplified.bru",
+          "seq": 4,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <communicationLanguageAtDeparture>en</communicationLanguageAtDeparture>\n        <bindingItinerary>0</bindingItinerary>\n        <limitDate>{{limitDate}}</limitDate>\n    </TransitOperation>\n    <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500663</referenceNumber>\n    </Authorisation>\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000142</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407741</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>0</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>25XI00000100004A5</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Guarantee>\n        <sequenceNumber>2</sequenceNumber>\n        <guaranteeType>1</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>24XI00000100002B2</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Guarantee>\n        <sequenceNumber>3</sequenceNumber>\n        <guaranteeType>2</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>25XI00000100005D6</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>100.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <!-- <inlandModeOfTransport>4</inlandModeOfTransport>\n        <modeOfTransportAtTheBorder>1</modeOfTransportAtTheBorder> -->\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407741</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n            <GoodsReference>\n                <sequenceNumber>1</sequenceNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n            </GoodsReference>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>B</typeOfLocation>\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\n            <authorisationNumber>XIDEPBT13ET</authorisationNumber>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>40</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <UNLocode>ADENC</UNLocode>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <!-- <countryOfDestination>GB</countryOfDestination> -->\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Radioactive Spiders</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.000</grossMass>\n                        <netMass>950.000</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>XI Box goods to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "var jsonData = res.getBody();\nvar departureId =  jsonData._links.self.href.split(\"/\")[5]\nbru.setEnvVar(\"departureId\",departureId);\n\ntest(\"POST IE015 must return response code is 202\", function () {\n    expect(res.getStatus()).to.equal(202);\n});\n\nif (res.getStatus() !== 202) {\n    return;\n}\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- GET IE015 --IE928--IE028--Ie029- IE045",
+          "filename": "02- GET IE015 --IE928--IE028--Ie029- IE045.bru",
+          "seq": 5,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures/6888d0e8ce68fb1a/messages/",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST GRN Balance Check GRN Type 1",
+          "filename": "02- POST GRN Balance Check GRN Type 1.bru",
+          "seq": 2,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "24XI00000100002B2",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "// const moment = require('moment');\n// let now = moment();\n// now.add('14', 'days');\n\n// let limitDate = now.format(\"YYYY-MM-DD\")\n\n// let arrivalTime = moment();\n// arrivalTime.add('14', 'days');\n\n// let LRN=\"TRATESTXI1\";\n// let charset = moment().format(\"YYMMDDHHmm\");\n\n// LRN += charset;\n\n// bru.setVar(\"LRN\", LRN);\n// bru.setVar(\"limitDate\", limitDate);\n// bru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\n// bru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\n// bru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- POST GRN Balance Check GRN Type 2",
+          "filename": "03- POST GRN Balance Check GRN Type 2.bru",
+          "seq": 3,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "25XI0000010000545",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "// const moment = require('moment');\n// let now = moment();\n// now.add('14', 'days');\n\n// let limitDate = now.format(\"YYYY-MM-DD\")\n\n// let arrivalTime = moment();\n// arrivalTime.add('14', 'days');\n\n// let LRN=\"TRATESTGB1\";\n// let charset = moment().format(\"YYMMDDHHmm\");\n\n// LRN += charset;\n\n// bru.setVar(\"LRN\", LRN);\n// bru.setVar(\"limitDate\", limitDate);\n// bru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\n// bru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\n// bru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "06- GET ALL IE007 -- IE025",
+          "filename": "06- GET ALL IE007 -- IE025.bru",
+          "seq": 7,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals/650ae55a469b0062/messages",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get all messages must return status code 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "IE007 Normal",
+          "filename": "IE007 Normal.bru",
+          "seq": 6,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/arrivals",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC007C PhaseID=\"NCTS5.0\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n  <messageSender>9999912345</messageSender>\n  <messageRecipient>NTA.GB</messageRecipient>\n  <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n  <messageIdentification>{{messageIdentification}}</messageIdentification>\n  <messageType>CC007C</messageType>\n  <TransitOperation>\n    <MRN>23XI000081EXVMQCJ0</MRN>\n    <arrivalNotificationDateAndTime>{{arrivalNotificationDateAndTime}}</arrivalNotificationDateAndTime>\n    <simplifiedProcedure>0</simplifiedProcedure>\n    <incidentFlag>0</incidentFlag>\n  </TransitOperation>\n  <CustomsOfficeOfDestinationActual>\n    <referenceNumber>GB000060</referenceNumber>\n  </CustomsOfficeOfDestinationActual>\n  <TraderAtDestination>\n    <identificationNumber>GB954131533000</identificationNumber> \n  </TraderAtDestination>\n  <Consignment>\n    <LocationOfGoods>\n      <typeOfLocation>C</typeOfLocation>\n      <qualifierOfIdentification>U</qualifierOfIdentification>     \n      <UNLocode>GBBEL</UNLocode>\n    </LocationOfGoods>\n  </Consignment>\n</ncts:CC007C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\n\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalNotificationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))\n"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "(Negative Test - Type09) 03 - Guarantee Balance after release for transit Multiple GRN types 0 1 9",
+      "filename": "Negative Test - Type09- 03 - Guarantee Balance after release for transit Multiple GRN types 0 1 9",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "(Negative Test - Type09) 03 - Guarantee Balance after release for transit Multiple GRN types 0 1 9"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check GRN Type 0",
+          "filename": "01- POST GRN Balance Check GRN Type 0.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "25XI00000100004A5",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST IE015 Simplified",
+          "filename": "01- POST IE015 Simplified.bru",
+          "seq": 4,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/xml",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "xml",
+              "xml": "<ncts:CC015C PhaseID=\"NCTS6\" xmlns:ncts=\"http://ncts.dgtaxud.ec\">\n    <messageSender>9999912345</messageSender>\n    <messageRecipient>NTA.XI</messageRecipient>\n    <preparationDateAndTime>{{preparationDateAndTime}}</preparationDateAndTime>\n    <messageIdentification>{{messageIdentification}}</messageIdentification>\n    <messageType>CC015C</messageType>\n    <TransitOperation>\n        <LRN>{{LRN}}</LRN>\n        <declarationType>T1</declarationType>\n        <additionalDeclarationType>A</additionalDeclarationType>\n        <security>0</security>\n        <reducedDatasetIndicator>0</reducedDatasetIndicator>\n        <bindingItinerary>0</bindingItinerary>\n        <limitDate>{{limitDate}}</limitDate>\n    </TransitOperation>\n    <Authorisation>\n        <sequenceNumber>1</sequenceNumber>\n        <type>C521</type>\n        <referenceNumber>XIACR24A1500661</referenceNumber>\n    </Authorisation>\n    <CustomsOfficeOfDeparture>\n        <referenceNumber>XI000081</referenceNumber>\n    </CustomsOfficeOfDeparture>\n    <CustomsOfficeOfDestinationDeclared>\n        <referenceNumber>GB000060</referenceNumber>\n    </CustomsOfficeOfDestinationDeclared>\n    <CustomsOfficeOfTransitDeclared>\n        <sequenceNumber>1</sequenceNumber>\n        <referenceNumber>GB000060</referenceNumber>\n        <arrivalDateAndTimeEstimated>{{arrivalTime}}</arrivalDateAndTimeEstimated>\n    </CustomsOfficeOfTransitDeclared>\n    <HolderOfTheTransitProcedure>\n        <identificationNumber>XI673265407737</identificationNumber>\n    </HolderOfTheTransitProcedure>\n    <Guarantee>\n        <sequenceNumber>1</sequenceNumber>\n        <guaranteeType>0</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>25XI00000100004A5</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>10000.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Guarantee>\n        <sequenceNumber>2</sequenceNumber>\n        <guaranteeType>1</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>24XI00000100002B2</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>25000.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Guarantee>\n        <sequenceNumber>3</sequenceNumber>\n        <guaranteeType>9</guaranteeType>\n        <GuaranteeReference>\n            <sequenceNumber>1</sequenceNumber>\n            <GRN>23XI00000100001D4</GRN>\n            <accessCode>AC01</accessCode>\n            <amountToBeCovered>40000.00</amountToBeCovered>\n            <currency>GBP</currency>\n        </GuaranteeReference>\n    </Guarantee>\n    <Consignment>\n        <countryOfDispatch>XI</countryOfDispatch>\n        <countryOfDestination>GB</countryOfDestination>\n        <containerIndicator>1</containerIndicator>\n        <grossMass>1000.00</grossMass>\n        <referenceNumberUCR>AB1234</referenceNumberUCR>\n        <Consignor>\n            <identificationNumber>XI673265407737</identificationNumber>\n        </Consignor>\n        <Consignee>\n            <identificationNumber>GB954131533000</identificationNumber>\n        </Consignee>\n        <TransportEquipment>\n            <sequenceNumber>1</sequenceNumber>\n            <containerIdentificationNumber>WGPCGR</containerIdentificationNumber>\n            <numberOfSeals>1</numberOfSeals>\n            <Seal>\n                <sequenceNumber>1</sequenceNumber>\n                <identifier>1234</identifier>\n            </Seal>\n        </TransportEquipment>\n        <LocationOfGoods>\n            <typeOfLocation>B</typeOfLocation>\n            <qualifierOfIdentification>Y</qualifierOfIdentification>\n            <authorisationNumber>XI DEP BT1 3ET</authorisationNumber>\n        </LocationOfGoods>\n        <DepartureTransportMeans>\n            <sequenceNumber>1</sequenceNumber>\n            <typeOfIdentification>30</typeOfIdentification>\n            <identificationNumber>NC15REG</identificationNumber>\n            <nationality>XI</nationality>\n        </DepartureTransportMeans>\n        <PlaceOfLoading>\n            <country>XI</country>\n            <location>Belfast</location>\n        </PlaceOfLoading>\n        <HouseConsignment>\n            <sequenceNumber>1</sequenceNumber>\n            <grossMass>1000.00</grossMass>\n            <ConsignmentItem>\n                <goodsItemNumber>1</goodsItemNumber>\n                <declarationGoodsItemNumber>1</declarationGoodsItemNumber>\n                <Commodity>\n                    <descriptionOfGoods>Pharmaceuticals</descriptionOfGoods>\n                    <CommodityCode>\n                        <harmonizedSystemSubHeadingCode>392690</harmonizedSystemSubHeadingCode>\n                    </CommodityCode>\n                    <GoodsMeasure>\n                        <grossMass>1000.00</grossMass>\n                        <netMass>950.00</netMass>\n                    </GoodsMeasure>\n                </Commodity>\n                <Packaging>\n                    <sequenceNumber>1</sequenceNumber>\n                    <typeOfPackages>BX</typeOfPackages>\n                    <numberOfPackages>1</numberOfPackages>\n                    <shippingMarks>Pharmaceuticals to be shipped</shippingMarks>\n                </Packaging>\n            </ConsignmentItem>\n        </HouseConsignment>\n    </Consignment>\n</ncts:CC015C>",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "// var jsonData = res.getBody();\n// var departureId =  jsonData._links.self.href.split(\"/\")[5]\n// bru.setEnvVar(\"departureId\",departureId);\n\n// test(\"POST IE015 must return response code is 202\", function () {\n//     expect(res.getStatus()).to.equal(202);\n// });\n\n// if (res.getStatus() !== 202) {\n//     return;\n// }\n",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- GET IE015 -- IE056",
+          "filename": "02- GET IE015 -- IE056.bru",
+          "seq": 5,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{baseURL}}/movements/departures/67fe6cae2a7fe07a/messages/",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.3.0+json",
+                "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Get requested departure Id must return status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\nif (res.getStatus() !== 200) {\n    return;\n}",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST GRN Balance Check GRN Type 1",
+          "filename": "02- POST GRN Balance Check GRN Type 1.bru",
+          "seq": 2,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "24XI00000100002B2",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "03- POST GRN Balance Check GRN Type 9",
+          "filename": "03- POST GRN Balance Check GRN Type 9.bru",
+          "seq": 3,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI00000100001D4",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "09 - Guarantee Balance Enquiry on Type1",
+      "filename": "09 - Guarantee Balance Enquiry on Type1",
+      "root": {
+        "docs": "IE015 > IE016",
+        "meta": {
+          "name": "09 - Guarantee Balance Enquiry on Type1"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check Send within 60 mins",
+          "filename": "01- POST GRN Balance Check Send within 60 mins.bru",
+          "seq": 2,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000152",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST GRN Balance Check",
+          "filename": "01- POST GRN Balance Check.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000152",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Invalid Access Codea and valid GRN Balance Check",
+          "filename": "01- POST Invalid Access Codea and valid GRN Balance Check.bru",
+          "seq": 4,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000152",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC11\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "01- POST Invalid GRN Balance Check",
+          "filename": "01- POST Invalid GRN Balance Check.bru",
+          "seq": 3,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000155",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "02- POST GRN Balance Post Check",
+          "filename": "02- POST GRN Balance Post Check.bru",
+          "seq": 5,
+          "settings": {},
+          "tags": [],
+          "request": {
+            "url": "{{apiGRNbaseURL}}/:grn/balance",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "enabled": true
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "Accept",
+                "value": "application/vnd.hmrc.2.0+json",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "grn",
+                "value": "23XI0000010000152",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"accessCode\": \"AC01\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "req": "const moment = require('moment');\nlet now = moment();\nnow.add('14', 'days');\n\nlet limitDate = now.format(\"YYYY-MM-DD\")\n\nlet arrivalTime = moment();\narrivalTime.add('14', 'days');\n\nlet LRN=\"TRATESTGB1\";\nlet charset = moment().format(\"YYMMDDHHmm\");\n\nLRN += charset;\n\nbru.setVar(\"LRN\", LRN);\nbru.setVar(\"limitDate\", limitDate);\nbru.setVar(\"preparationDateAndTime\", moment().format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"arrivalTime\", arrivalTime.format(\"YYYY-MM-DDThh:mm:ss\"));\nbru.setVar(\"messageIdentification\",_.random(11190913102542,55190913102542))"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      },
+      "vars": {
+        "req": [
+          {
+            "name": "LRN",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "wS8uru7vGCoWsAXNPHqB8"
+          },
+          {
+            "name": "limitDate",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "YhQLQdy1tmalKPmGotI4B"
+          },
+          {
+            "name": "preparationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "pjWTWXPzRYTiytF9KLlti"
+          },
+          {
+            "name": "arrivalTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "80txeBpHAWvYFvOvqMTnF"
+          },
+          {
+            "name": "messageIdentification",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "ETchszIwu2J8yw9uusynb"
+          },
+          {
+            "name": "arrivalNotificationDateAndTime",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "H5o2zhbEq2VVhcuGClJEG"
+          }
+        ]
+      }
+    },
+    "meta": {
+      "name": "19 - GMS E2E Testing XI - SIT"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "19 - GMS E2E Testing XI - SIT",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.07826042175292969,
+    "filesCount": 50
+  }
+}
